@@ -1,1 +1,2 @@
-Criar uma hash PassWord Function
+-> Criar uma hash PassWord Function
+-> Criar uma função para calcular o que uma determinada pessoa tem em un determinado momento na conta (necessário somar/subtrair as transações)

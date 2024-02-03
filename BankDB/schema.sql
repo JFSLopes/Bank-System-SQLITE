@@ -1,10 +1,10 @@
 PRAGMA foreign_keys = ON;
-DROP TABLE MyBank;
-DROP TABLE Client;
-DROP TABLE Account;
-DROP TABLE State;
-DROP TABLE Type;
-DROP TABLE Transfer;
+DROP TABLE IF EXISTS MyBank;
+DROP TABLE IF EXISTS Client;
+DROP TABLE IF EXISTS Account;
+DROP TABLE IF EXISTS State;
+DROP TABLE IF EXISTS Type;
+DROP TABLE IF EXISTS Transfer;
 CREATE TABLE State(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     state VARCHAR(15) NOT NULL
@@ -29,10 +29,8 @@ CREATE TABLE Client(
             OR email LIKE '%sapo.pt'
         )
     ),
-    hashPassWord VARCHAR(16) CHECK (
-        LENGHT(hashPassWord) >= 8
-        AND LENGHT(hashPassWord) <= 16
-    ),
+    hashPassWord VARCHAR(60) NOT NULL UNIQUE,
+    salt VARCHAR(20) NOT NULL UNIQUE,
     bank INTEGER,
     FOREIGN KEY (bank) REFERENCES Bank(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
