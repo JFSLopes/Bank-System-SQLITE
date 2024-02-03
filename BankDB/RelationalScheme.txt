@@ -1,0 +1,6 @@
+MyBank(id, name)
+Client(id, firstName, lastName, email, bank->MyBank)
+Account(id, balance, date, client->Client)
+State(id, state)
+Type(id, type)
+Transfer(id, date, amount, dest->Account, state->State, type->Type)
