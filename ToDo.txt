@@ -1,2 +1,9 @@
 -> Criar uma hash PassWord Function
--> Criar uma função para calcular o que uma determinada pessoa tem em un determinado momento na conta (necessário somar/subtrair as transações)
+
+
+    Palavras passe usam uma função hash e um salt (tem de ser único) para proteger uma palavra passe. Verificar se um user acertou a sua palavra pass
+consiste em usar o mesmo salt para o input e ver se deu o que era esperado.
+Criar uma função para calcular o que uma determinada pessoa tem em un determinado momento na conta (necessário somar/subtrair as transações)
+
+
+-> Dar nome as constrains (não é obrigatório)
