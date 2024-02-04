@@ -64,6 +64,5 @@ This project is licensed under the [MIT License](LICENSE).
 ## Acknowledgments
 
 - Special thanks to [Library/Tool/Framework Name] for their contributions.
-- Hash Passoword function: https://github.com/B-Con/crypto-algorithms/blob/master/sha256.c
 
 Feel free to contribute, report issues, or suggest improvements!

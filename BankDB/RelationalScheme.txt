@@ -1,5 +1,5 @@
 MyBank(id, name)
-Client(id, firstName, lastName, email, hashPassWord, salt, bank->MyBank)
+Client(id, firstName, lastName, email, encPassWord, bank->MyBank)
 Account(id, balance, date, client->Client)
 State(id, state)
 Type(id, type)

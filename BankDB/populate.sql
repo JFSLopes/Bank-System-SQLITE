@@ -15,6 +15,17 @@ INSERT INTO MyBank (name)
 VALUES ('National Bank'),
     ('City Bank');
 ----------------------------------------------------------
+---------------- Populate Client -------------------------
+INSERT INTO Client (firstName, lastName, email, encPassWord, bank)
+VALUES ('Alice', 'Wilson', 'alice_wilson@gmail.com', 'whzz~vyk8', 1),
+    ('Charlie', 'Brown', 'charlie_brown@hotmail.com', 'whzz~vyk9', 1),
+    ('Frank', 'Wilson', 'frank_wilson@gmail.com', 'whzz~vyk:', 1),
+    ('Alice', 'Jones', 'alice_jones@hotmail.com', 'whzz~vyk;', 1),
+    ('Charlie', 'Williams', 'charlie_williams@sapo.pt', 'whzz~vyk<', 1),
+    ('Frank', 'Smith', 'frank_smith@sapo.pt', 'whzz~vyk=', 1),
+    ('David', 'Johnson', 'david_johnson@sapo.pt', 'whzz~vyk>', 1),
+    ('Alice', 'Williams', 'alice_williams@gmail.com', 'whzz~vyk?', 1);
+----------------------------------------------------------
 ---------------- Populate Account ------------------------
 INSERT INTO Account (balance, date, client)
 VALUES (1000.0, '2003-04-09 18:55:35', 1),
