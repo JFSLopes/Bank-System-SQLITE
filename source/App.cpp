@@ -1,5 +1,6 @@
 #include "../header/App.h"
 #include "../header/CallBackFunc.h"
+#include "../header/passWordEnc.h"
 #include <stdexcept>
 #include <fstream>
 
@@ -8,7 +9,7 @@ App::App(std::string& db, std::string& pop1, std::string& pop2) : schemaPath(std
 }
 
 void App::init(){
-    int x = sqlite3_open("/Users/joselopes/Desktop/Bank-System/build/db.sql", &db);
+    int x = sqlite3_open("build/db.sql", &db);
     if (x != SQLITE_OK){
         throw std::runtime_error("Failed to open the SQLite database.");
     }
@@ -17,8 +18,13 @@ void App::init(){
 
 void App::api() const{
     populate();
-    char* errMsg = nullptr;
-    sqlite3_exec(db, "SELECT * FROM Client;", callback::clientCallback, nullptr, &errMsg);
+    if (clientLogin()){
+        std::cout << "Login sucessed.\n";
+    }
+    else{
+        std::cout << "Login failed.\n";
+    }
+    sqlite3_close(db);
 }
 
 void App::populate() const{
@@ -43,4 +49,54 @@ void App::readFile(std::ifstream& in) const{
             throw std::runtime_error("Failed to populate the SQLite database.");
         }
     }
+}
+
+bool App::clientLogin() const{
+    std::cout << "Email: ";
+    int maxChars = 30;
+    char* email = readCharFromInput(maxChars);
+
+    std::cout << "Password: ";
+    maxChars = 16;
+    char* password = readCharFromInput(maxChars);
+
+    std::string aux(email);
+    std::string query = "SELECT encPassWord FROM Client WHERE email = '" + aux + "';";
+
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Error preparing query." << std::endl;
+        sqlite3_close(db);
+        return 1;
+    }
+    bool ans = false;
+    if(sqlite3_step(stmt) == SQLITE_ROW){
+        const char *encPass = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        std::string pass(encPass);
+        if(password::verifyPassword(password, pass)){
+            ans = true;
+        }
+        else{
+            std::cout << "Wrong password.\n";
+        }
+    }
+    else{
+        std::cout << "Invalid email or password.\n";
+    }
+    sqlite3_finalize(stmt);
+    return ans;
+}
+
+char* App::readCharFromInput(int size) const{
+    char* buffer = new char[size + 1];
+    std::cin.getline(buffer, size);
+    if(std::cin.fail()){
+        std::cerr << "Input error." << std::endl;
+        return nullptr;
+    }
+    if(std::cin.gcount() == size){
+        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    return buffer;
 }
