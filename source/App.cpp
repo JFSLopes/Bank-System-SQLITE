@@ -1,6 +1,7 @@
 #include "../header/App.h"
 #include "../header/CallBackFunc.h"
 #include "../header/passWordEnc.h"
+#include "../header/ClientQueries.h"
 #include <stdexcept>
 #include <fstream>
 
@@ -18,6 +19,7 @@ void App::init(){
 
 void App::api() const{
     populate();
+    std::cout << ClientQueries::fullName(4, db) << '\n';
     if (clientLogin()){
         std::cout << "Login sucessed.\n";
     }
@@ -65,9 +67,8 @@ bool App::clientLogin() const{
 
     sqlite3_stmt* stmt;
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
-        std::cerr << "Error preparing query." << std::endl;
         sqlite3_close(db);
-        return 1;
+        throw std::runtime_error("Query was invalid");
     }
     bool ans = false;
     if(sqlite3_step(stmt) == SQLITE_ROW){

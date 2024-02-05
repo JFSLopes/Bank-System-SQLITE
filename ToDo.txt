@@ -11,3 +11,5 @@ Criar uma função para calcular o que uma determinada pessoa tem em un determin
 -> Verificar o clientLogin (garantir que o maxChar,... estão corretos)
 -> Usar caminhos relativos
 -> Quando erra a palavra passe deixar repetir
+
+-> Client -> opções para ver detalhes da conta -> possibilita ver o histórico de transferências
