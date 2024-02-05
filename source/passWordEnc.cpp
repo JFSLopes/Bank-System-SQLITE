@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include "../header/passWordEnc.h"
 
 namespace password
 {

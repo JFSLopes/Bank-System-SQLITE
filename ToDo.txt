@@ -7,3 +7,7 @@ Criar uma função para calcular o que uma determinada pessoa tem em un determin
 
 
 -> Dar nome as constrains (não é obrigatório)
+
+-> Verificar o clientLogin (garantir que o maxChar,... estão corretos)
+-> Usar caminhos relativos
+-> Quando erra a palavra passe deixar repetir

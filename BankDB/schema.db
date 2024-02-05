@@ -33,7 +33,7 @@ CREATE TABLE Client(
             OR email LIKE '%hotmail.com'
             OR email LIKE '%sapo.pt'
         )
-    ),
+    ) UNIQUE,
     encPassWord VARCHAR(60) NOT NULL,
     bank INTEGER,
     FOREIGN KEY (bank) REFERENCES MyBank(id) ON UPDATE CASCADE ON DELETE CASCADE,
