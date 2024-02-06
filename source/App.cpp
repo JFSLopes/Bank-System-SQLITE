@@ -19,14 +19,13 @@ void App::init(){
 void App::api(){
     populate();
     if (clientLogin()){
-        std::cout << "Login sucessed.\n";
+        std::cout << "Login sucessed. Welcome " << currLogin.getName(db) << ".\n";
     }
     else{
         std::cout << "Login failed.\n";
     }
-    std::cout << currLogin.getName(db) << '\n';
-    std::cout << currLogin.currBalance(db) << '\n';
-    currLogin.seeTransferHistory(5, db);
+    currLogin.seeTransferHistory(5, db, false);
+    currLogin.seeTransferHistory(5, db, true);
     sqlite3_close(db);
 }
 

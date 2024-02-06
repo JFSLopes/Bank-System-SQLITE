@@ -27,29 +27,13 @@ double Client::currBalance(sqlite3* db) const{
 /**
  * state must be completed
 */
-void Client::seeTransferHistory(int numTransfers, sqlite3* db) const{
-    std::string query = "SELECT T.type, date, amount, dest, origin "
-                        "FROM Transfer "
-                        "JOIN Type T ON T.id = Transfer.type "
-                        "JOIN State S ON S.id = Transfer.state "
-                        "WHERE S.state = 'Completed' "
-                        "AND (dest = " + std::to_string(clientID) +
-                        " OR origin = " +  std::to_string(clientID) + ") "
-                        "ORDER BY date DESC ";
-    if (numTransfers != -1){
-        query += "LIMIT " + std::to_string(numTransfers);
-    }
-    query += ';';
-    char* errMsg = nullptr;
-    std::vector<TransferRecord> transferRecords;
-    if (sqlite3_exec(db, query.c_str(), callback::transferCallBack, &transferRecords, &errMsg) != SQLITE_OK){
-        std::cout << errMsg << '\n';
-        throw std::runtime_error("Failure on the transfer history.\n");
-    }
-    showTransfersHistory(transferRecords, db);
+void Client::seeTransferHistory(int numTransfers, sqlite3* db, bool failed) const{
+    std::vector<TransferRecord> transferRecords = TransferQueries::getTransfers(accountID, clientID, numTransfers, failed, db);
+    std::cout << (!failed ? "\n\n\t\t\t\t\t\t" : "\n\n\t\t\t\t") << (!failed ? " Completed" : " Failed") <<  " transfers\n\n";
+    showTransfersHistory(transferRecords, db, failed);
 }
 
-void Client::showTransfersHistory(const std::vector<TransferRecord>& transfers, sqlite3* db) const{
+void Client::showTransfersHistory(const std::vector<TransferRecord>& transfers, sqlite3* db, bool failed) const{
     double curr = currBalance(db);
     for (const auto& t : transfers){
         std::cout << std::setw(7) << std::left << "DATE: " << std::setw(10) << std::left << t.date 
@@ -57,16 +41,21 @@ void Client::showTransfersHistory(const std::vector<TransferRecord>& transfers, 
               
         if (t.origin == clientID){
             std::cout << " /   TO: " << std::setw(20) << std::left << ClientQueries::fullName(t.dest, db) 
-                      << " -" << std::setw(10) << std::left << t.amount 
-                      << " / Inicial Balance: " << std::setw(8) << std::left << curr;
-            curr -= t.amount;
+                      << " -" << std::setw(10) << std::left << t.amount;
+            if (!failed){
+                std::cout << " / Inicial Balance: " << std::setw(8) << std::left << curr;
+                curr -= t.amount;
+            }
         }
         else{
             std::cout << " / FROM: " << std::setw(20) << std::left << ClientQueries::fullName(t.origin, db) 
-                      << " +" << std::setw(10) << std::left << t.amount 
-                      << " / Inicial Balance: " << std::setw(8) << std::left << curr;
-            curr += t.amount;
+                      << " +" << std::setw(10) << std::left << t.amount;
+            if (!failed){
+                std::cout << " / Inicial Balance: " << std::setw(8) << std::left << curr;
+                curr += t.amount;
+            }
         }
-        std::cout << " / Final Balance: " << curr << '\n';
+        if (!failed) std::cout << " / Final Balance: " << curr;
+        std::cout << '\n';
     }
 }
