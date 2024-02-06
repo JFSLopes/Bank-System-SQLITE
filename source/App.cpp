@@ -1,6 +1,7 @@
 #include "../header/App.h"
 #include "../header/passWordEnc.h"
 #include "../header/ClientQueries.h"
+#include "../header/Display.h"
 #include <stdexcept>
 #include <fstream>
 
@@ -18,14 +19,50 @@ void App::init(){
 
 void App::api(){
     populate();
-    std::cout << "Welcome to the Bank API.\n\n";
-    std::cout << "Please enter your credentials.\n";
-    while(!clientLogin()){
-        std::cout << "Login failed, try again.\n";
+    while (true){
+        Display::description();
+        std::cout << "Please enter your credentials.\n";
+        if(!clientLogin()){
+            std::cout << "Login failed.\n";
+            continue;
+        }
+        else{
+            std::cout << "Welcome " << currLogin.getName(db) << ".\n";
+            while(true){
+                Display::options();
+                bool log_out = false;
+                switch(askNumber(9)){
+                    case 1: {
+                        std::cout << "Your current balance is " << currLogin.currBalance(db) << ".\n";
+                        break;
+                    }
+                    case 2: {
+                        std::cout << "How many transfer do you want to be displayed? ";
+                        int num = askNumber(30);
+                        currLogin.seeTransferHistory(num, db, false);
+                        break;
+                    }
+                    case 3: {
+                        std::cout << "How many transfer do you want to be displayed? ";
+                        int num = askNumber(30);
+                        currLogin.seeTransferHistory(num, db, true);
+                        break;
+                    }
+                    case 9:
+                        log_out = true;
+                        break;
+                }
+                std::cout << '\n';
+                if (log_out) break;
+            }
+        }
+        std::cout << "Want to close the app?\n[y/n]: ";
+        std::string input;
+        std::cin >> input;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (input == "y") break;
     }
-    std::cout << "Login sucessed. Welcome " << currLogin.getName(db) << ".\n";
-    currLogin.seeTransferHistory(5, db, false);
-    currLogin.seeTransferHistory(5, db, true);
     sqlite3_close(db);
 }
 
@@ -97,4 +134,19 @@ char* App::readCharFromInput(int size) const{
     }
     if (failed) return nullptr;
     return buffer;
+}
+
+int App::askNumber(int upperLimit) const{
+    int num;
+    while (true) {
+        if (!(std::cin >> num)){
+            std::cout << "Invalid input. Please enter a number: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        } else if (num <= 0 || num > upperLimit){
+            std::cout << "Invalid number. Please enter a number between 1 and " << upperLimit << ": ";
+        } else {
+            return num;
+        }
+    }
 }

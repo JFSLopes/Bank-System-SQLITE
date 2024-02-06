@@ -16,6 +16,7 @@ class App{
         void api();
         void populate() const;
         bool clientLogin();
+        int askNumber(int upperLimit) const;
     public:
         App(std::string& db, std::string& pop1, std::string& pop2);
         void readFile(std::ifstream& in) const;

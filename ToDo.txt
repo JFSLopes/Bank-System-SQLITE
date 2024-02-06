@@ -1,4 +1,1 @@
--> Verificar o clientLogin (garantir que o maxChar,... estão corretos)
--> Quando erra a palavra passe deixar repetir
-
 -> Função para adicionar transferências/clientes/contas
