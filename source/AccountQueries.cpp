@@ -15,3 +15,15 @@ double AccountQueries::getBalance(int id, sqlite3* db){
     }
     return -1;
 }
+
+int AccountQueries::getID(int clientID, sqlite3* db){
+    std::string query = "SELECT id FROM Account WHERE client = " + std::to_string(clientID) + ';';
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK){
+        throw std::runtime_error("Query on Client failed");
+    }
+    if (sqlite3_step(stmt) == SQLITE_ROW){
+        return std::stoi(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));
+    }
+    return -1;
+}

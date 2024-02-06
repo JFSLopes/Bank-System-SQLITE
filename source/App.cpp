@@ -57,45 +57,38 @@ bool App::clientLogin(){
     std::cout << "Email: ";
     int maxChars = 30;
     char* email = readCharFromInput(maxChars);
+    if (email == nullptr) return clientLogin();
+    std::cout << email << '\n';
 
     std::cout << "Password: ";
     maxChars = 16;
     char* password = readCharFromInput(maxChars);
+    if (password == nullptr) return clientLogin();
 
     std::string aux(email);
-    std::string query = "SELECT id, encPassWord FROM Client WHERE email = '" + aux + "';";
-
-    sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
-        sqlite3_close(db);
-        throw std::runtime_error("Query was invalid");
+    std::pair<int, std::string> login = ClientQueries::get_ID_Email(aux, db);
+    if (login.first == -1){
+        std::cout << "Invalid email.\n";
+        return false;
     }
-    bool ans = false;
-    if(sqlite3_step(stmt) == SQLITE_ROW){
-        int id = std::stoi(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));
-        const char *encPass = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-
-        std::string pass(encPass);
-        if(password::verifyPassword(password, pass)){
-            currLogin = Client(id, db);
-            ans = true;
-        }
-        else{
-            std::cout << "Wrong password.\n";
-        }
+    else if(password::verifyPassword(password, login.second)){
+        currLogin = Client(login.first, db);
+        return true;
     }
     else{
-        std::cout << "Invalid email or password.\n";
+        std::cout << "Wrong password.\n";
+        return false;
     }
-    sqlite3_finalize(stmt);
-    return ans;
 }
 
 char* App::readCharFromInput(int size) const{
     char* buffer = new char[size + 1];
-    std::cin.getline(buffer, size);
+    std::cin.getline(buffer, size + 1);
     if(std::cin.fail()){
         std::cerr << "Input error." << std::endl;
+        delete [] buffer;
+        std::cin.ignore();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         return nullptr;
     }
     if(std::cin.gcount() == size){
