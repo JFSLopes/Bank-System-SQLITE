@@ -1,8 +1,4 @@
--> Dar nome as constrains (não é obrigatório)
-
 -> Verificar o clientLogin (garantir que o maxChar,... estão corretos)
--> Usar caminhos relativos
 -> Quando erra a palavra passe deixar repetir
 
--> Client -> opções para ver detalhes da conta -> possibilita ver o histórico de transferências
 -> Função para adicionar transferências/clientes/contas

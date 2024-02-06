@@ -20,9 +20,6 @@ double Client::currBalance(sqlite3* db) const{
     return AccountQueries::getBalance(accountID, db);
 }
 
-/**
- * state must be completed
-*/
 void Client::seeTransferHistory(int numTransfers, sqlite3* db, bool failed) const{
     std::vector<TransferRecord> transferRecords = TransferQueries::getTransfers(accountID, clientID, numTransfers, failed, db);
     std::cout << (!failed ? "\n\n\t\t\t\t\t\t" : "\n\n\t\t\t\t") << (!failed ? " Completed" : " Failed") <<  " transfers\n\n";
