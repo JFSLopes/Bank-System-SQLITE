@@ -1,5 +1,4 @@
 #include "../header/App.h"
-#include "../header/CallBackFunc.h"
 #include "../header/passWordEnc.h"
 #include "../header/ClientQueries.h"
 #include <stdexcept>
@@ -27,6 +26,7 @@ void App::api(){
     }
     std::cout << currLogin.getName(db) << '\n';
     std::cout << currLogin.currBalance(db) << '\n';
+    currLogin.seeTransferHistory(5, db);
     sqlite3_close(db);
 }
 

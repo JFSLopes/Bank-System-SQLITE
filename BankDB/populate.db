@@ -7,8 +7,8 @@ VALUES ('Pending'),
 ----------------------------------------------------------
 ---------------- Populate Type ---------------------------
 INSERT INTO Type (type)
-VALUES ('Normal Transfer'),
-('Urgent Transfer');
+VALUES ('Normal'),
+('Urgent');
 ----------------------------------------------------------
 ---------------- Populate MyBank -------------------------
 INSERT INTO MyBank (name)
