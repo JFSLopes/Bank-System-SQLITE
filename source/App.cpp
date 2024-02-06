@@ -17,15 +17,16 @@ void App::init(){
     api();
 }
 
-void App::api() const{
+void App::api(){
     populate();
-    std::cout << ClientQueries::fullName(4, db) << '\n';
     if (clientLogin()){
         std::cout << "Login sucessed.\n";
     }
     else{
         std::cout << "Login failed.\n";
     }
+    std::cout << currLogin.getName(db) << '\n';
+    std::cout << currLogin.currBalance(db) << '\n';
     sqlite3_close(db);
 }
 
@@ -53,7 +54,7 @@ void App::readFile(std::ifstream& in) const{
     }
 }
 
-bool App::clientLogin() const{
+bool App::clientLogin(){
     std::cout << "Email: ";
     int maxChars = 30;
     char* email = readCharFromInput(maxChars);
@@ -63,7 +64,7 @@ bool App::clientLogin() const{
     char* password = readCharFromInput(maxChars);
 
     std::string aux(email);
-    std::string query = "SELECT encPassWord FROM Client WHERE email = '" + aux + "';";
+    std::string query = "SELECT id, encPassWord FROM Client WHERE email = '" + aux + "';";
 
     sqlite3_stmt* stmt;
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
@@ -72,9 +73,12 @@ bool App::clientLogin() const{
     }
     bool ans = false;
     if(sqlite3_step(stmt) == SQLITE_ROW){
-        const char *encPass = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        int id = std::stoi(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));
+        const char *encPass = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+
         std::string pass(encPass);
         if(password::verifyPassword(password, pass)){
+            currLogin = Client(id, db);
             ans = true;
         }
         else{
