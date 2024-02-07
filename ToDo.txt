@@ -4,3 +4,4 @@
    
 -> O mesmo cliente pode ter mais do que uma conta, por isso perguntar sempre que conta querem abrir. Mostrar o id, saldo e data de criação.
 -> É necessário adaptar a função dentro do construtor do cliente, para quando a FK para o account é nula.
+-> Criar as INSERT INTO nas classes classes AccountQueries,...

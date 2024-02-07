@@ -27,8 +27,10 @@ void App::api(){
                 loginInterface();
                 break;
             }
-            case 2:
+            case 2:{
+                newClient();
                 break;
+            }
             case 3:
                 break;
             case 4:
@@ -161,10 +163,24 @@ int App::askNumber(int upperLimit) const{
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return num;
 }
-/*
+
 void App::newClient() const{
+    std::cout << "First Name: ";
+    int maxChars = 15;
+    char* firstName = readCharFromInput(maxChars);
+    if (firstName == nullptr){
+        std::cout << "Invalid name.\n";
+    }
+
+    std::cout << "Last Name: ";
+    maxChars = 15;
+    char* lastName = readCharFromInput(maxChars);
+    if (lastName == nullptr){
+        std::cout << "Invalid name.\n";
+    }
+
     std::cout << "Email: ";
-    int maxChars = 30;
+    maxChars = 30;
     char* email = readCharFromInput(maxChars);
     if (email == nullptr){
         std::cout << "Invalid email.\n";
@@ -178,13 +194,13 @@ void App::newClient() const{
         std::cout << "Invalid password.\n";
     }
 
-    std::string aux(email);
-    std::pair<int, std::string> login = ClientQueries::get_ID_Email(aux, db);
-    if (login.first != -1){
-        std::cout << aux << " is already registered.\n";
+    std::string encPass = password::hashPassword(password);
+
+    // Try to introduce the new client into the data base
+    if (ClientQueries::insertClient(firstName, lastName, email, encPass, db, pop2)){
+        std::cout << "New client registerd.\n";
     }
     else{
-
+        std::cout << "Registration failed.\n";
     }
 }
-*/

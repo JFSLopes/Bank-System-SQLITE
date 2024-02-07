@@ -6,9 +6,6 @@
 Client::Client() : clientID(-1) {}
 Client::Client(int clientID, sqlite3* db) : clientID(clientID) {
     accountID = AccountQueries::getID(clientID, db);
-    if(accountID == -1){
-        throw std::runtime_error("A invalid Client was created");
-    }
 }
 
 
@@ -17,10 +14,18 @@ std::string Client::getName(sqlite3* db) const{
 }
 
 double Client::currBalance(sqlite3* db) const{
+    if (accountID == -1){
+        std::cout << "You do not have an account.\n";
+        return -1;
+    }
     return AccountQueries::getBalance(accountID, db);
 }
 
 void Client::seeTransferHistory(int numTransfers, sqlite3* db, bool failed) const{
+    if (accountID == -1){
+        std::cout << "You do not have an account.\n";
+        return;
+    }
     std::vector<TransferRecord> transferRecords = TransferQueries::getTransfers(accountID, clientID, numTransfers, failed, db);
     std::cout << (!failed ? "\n\n\t\t\t\t\t\t" : "\n\n\t\t\t\t") << (!failed ? " Completed" : " Failed") <<  " transfers\n\n";
     showTransfersHistory(transferRecords, db, failed);

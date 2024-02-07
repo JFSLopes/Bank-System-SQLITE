@@ -1,5 +1,6 @@
 #include "../header/ClientQueries.h"
 #include <iostream>
+#include <fstream>
 
 std::string ClientQueries::fullName(int id, sqlite3* db){
     const std::string query = "SELECT firstName, lastName FROM Client WHERE id = " + std::to_string(id) + ';';
@@ -34,4 +35,24 @@ std::pair<int, std::string> ClientQueries::get_ID_Email(const std::string& input
         return std::make_pair(id, pass);
     }
     return std::make_pair(-1,"");
+}
+
+bool ClientQueries::insertClient(const std::string& firstName, const std::string& lastName, const std::string& email, const std::string& encPass, sqlite3* db, const std::string& path){
+    std::string query = "INSERT INTO Client (firstName, lastName, email, encPassWord, bank) VALUES ('" + firstName + "', '" + lastName + "', '" + email + "', '" + encPass + "', 1);\n";
+
+    char* errMsg = nullptr;
+    if (sqlite3_exec(db, query.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
+        std::string errorMessage = "SQL error: ";
+        errorMessage += errMsg;
+        std::cout << errorMessage << '\n';
+        sqlite3_free(errMsg); // Free the error message buffer allocated by SQLite
+        return false;
+    }
+    std::ofstream file(path, std::ios::app);
+    if (!file.is_open()){
+        std::cout << "File path is invalid";
+    }
+    file << query;
+    file.close();
+    return true;
 }
