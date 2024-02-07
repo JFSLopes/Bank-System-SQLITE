@@ -17,10 +17,12 @@ class App{
         void populate() const;
         bool clientLogin();
         int askNumber(int upperLimit) const;
+        void newClient() const;
     public:
         App(std::string& db, std::string& pop1, std::string& pop2);
         void readFile(std::ifstream& in) const;
         char* readCharFromInput(int size) const;
+        void loginInterface();
 };
 
 #endif

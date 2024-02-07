@@ -4,7 +4,7 @@
 class Display{
     public:
         static void description();
-        static void options();
+        static void afterLoginOptions();
 };
 
 #endif

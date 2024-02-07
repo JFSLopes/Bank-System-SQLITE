@@ -19,51 +19,60 @@ void App::init(){
 
 void App::api(){
     populate();
+    bool leave = false;
     while (true){
         Display::description();
-        std::cout << "Please enter your credentials.\n";
-        if(!clientLogin()){
-            std::cout << "Login failed.\n";
-            continue;
-        }
-        else{
-            std::cout << "Welcome " << currLogin.getName(db) << ".\n";
-            while(true){
-                Display::options();
-                bool log_out = false;
-                switch(askNumber(9)){
-                    case 1: {
-                        std::cout << "Your current balance is " << currLogin.currBalance(db) << ".\n";
-                        break;
-                    }
-                    case 2: {
-                        std::cout << "How many transfer do you want to be displayed? ";
-                        int num = askNumber(30);
-                        currLogin.seeTransferHistory(num, db, false);
-                        break;
-                    }
-                    case 3: {
-                        std::cout << "How many transfer do you want to be displayed? ";
-                        int num = askNumber(30);
-                        currLogin.seeTransferHistory(num, db, true);
-                        break;
-                    }
-                    case 9:
-                        log_out = true;
-                        break;
-                }
-                std::cout << '\n';
-                if (log_out) break;
+        switch (askNumber(9)){
+            case 1:{
+                loginInterface();
+                break;
             }
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 9:
+                leave = true;
+                break;
         }
-        std::cout << "Want to close the app?\n[y/n]: ";
-        std::string input;
-        std::cin >> input;
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        if (input == "y") break;
+        if(leave) break;
     }
     sqlite3_close(db);
+}
+
+void App::loginInterface(){
+    std::cout << "Please enter your credentials.\n";
+    while(!clientLogin()){
+        std::cout << "Login failed, try again.\n";
+    }
+    std::cout << "Welcome " << currLogin.getName(db) << ".\n";
+    while(true){
+        Display::afterLoginOptions();
+        switch(askNumber(9)){
+            case 1: {
+                std::cout << "Your current balance is " << currLogin.currBalance(db) << ".\n";
+                break;
+            }
+            case 2: {
+                std::cout << "How many transfer do you want to be displayed? ";
+                int num = askNumber(30);
+                currLogin.seeTransferHistory(num, db, false);
+                break;
+            }
+            case 3: {
+                std::cout << "How many transfer do you want to be displayed? ";
+                int num = askNumber(30);
+                currLogin.seeTransferHistory(num, db, true);
+                break;
+            }
+            case 9:
+                std::cout << '\n';
+                return;
+        }
+        std::cout << '\n';
+    }
 }
 
 void App::populate() const{
@@ -146,7 +155,36 @@ int App::askNumber(int upperLimit) const{
         } else if (num <= 0 || num > upperLimit){
             std::cout << "Invalid number. Please enter a number between 1 and " << upperLimit << ": ";
         } else {
-            return num;
+            break;
         }
     }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    return num;
 }
+/*
+void App::newClient() const{
+    std::cout << "Email: ";
+    int maxChars = 30;
+    char* email = readCharFromInput(maxChars);
+    if (email == nullptr){
+        std::cout << "Invalid email.\n";
+    }
+
+    std::cout << "Password: ";
+    maxChars = 16;
+    char* password = readCharFromInput(maxChars);
+    std::cout << '\n';
+    if (password == nullptr){
+        std::cout << "Invalid password.\n";
+    }
+
+    std::string aux(email);
+    std::pair<int, std::string> login = ClientQueries::get_ID_Email(aux, db);
+    if (login.first != -1){
+        std::cout << aux << " is already registered.\n";
+    }
+    else{
+
+    }
+}
+*/
