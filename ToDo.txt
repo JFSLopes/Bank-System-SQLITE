@@ -2,3 +2,5 @@
 -> Ao adicionar transferências é necessário ter cuidado, pois é necessário atualizar as contas das quais o dinheiro sai e entra.
    Usar o "UPDATE TABLE <> SET" num ficheiro à parte para atualizar os dados depois do populate.
    
+-> O mesmo cliente pode ter mais do que uma conta, por isso perguntar sempre que conta querem abrir. Mostrar o id, saldo e data de criação.
+-> É necessário adaptar a função dentro do construtor do cliente, para quando a FK para o account é nula.

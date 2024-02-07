@@ -6,8 +6,9 @@
 void Display::description(){
     std::cout << "\n\t\t\t\tWelcome to the Bank API.\n";
     std::cout << "\t1. Login\n"
-              << "\t2. Register account\n"
-              << "\t3. Register new transfer\n"
+              << "\t2. Register client"
+              << "\t3. Register account\n"
+              << "\t4. Register new transfer\n"
               << "\t9. Close app\n\n"
               << "[1..9]: ";
 }

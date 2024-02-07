@@ -31,6 +31,8 @@ void App::api(){
                 break;
             case 3:
                 break;
+            case 4:
+                break;
             case 9:
                 leave = true;
                 break;
@@ -159,3 +161,30 @@ int App::askNumber(int upperLimit) const{
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return num;
 }
+/*
+void App::newClient() const{
+    std::cout << "Email: ";
+    int maxChars = 30;
+    char* email = readCharFromInput(maxChars);
+    if (email == nullptr){
+        std::cout << "Invalid email.\n";
+    }
+
+    std::cout << "Password: ";
+    maxChars = 16;
+    char* password = readCharFromInput(maxChars);
+    std::cout << '\n';
+    if (password == nullptr){
+        std::cout << "Invalid password.\n";
+    }
+
+    std::string aux(email);
+    std::pair<int, std::string> login = ClientQueries::get_ID_Email(aux, db);
+    if (login.first != -1){
+        std::cout << aux << " is already registered.\n";
+    }
+    else{
+
+    }
+}
+*/
