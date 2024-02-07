@@ -1,3 +1,4 @@
+-> Reescrever o README
 No futuro:
    -> Função para agendar transferências (marcar o estado como pending)
    -> Eliminar client/account/transfer (basta eliminar o tuplo, pois como tem Cascade, eliminaria todos os que referenciavam.)
