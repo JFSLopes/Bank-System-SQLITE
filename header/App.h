@@ -18,6 +18,10 @@ class App{
         bool clientLogin();
         int askNumber(int upperLimit) const;
         void newClient() const;
+        /**
+         * False means the client does not have an account.
+        */
+        bool changeCurrentAccount();
     public:
         App(std::string& db, std::string& pop1, std::string& pop2);
         void readFile(std::ifstream& in) const;

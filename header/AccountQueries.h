@@ -4,8 +4,15 @@
 #include <sqlite3.h>
 #include <string>
 
+struct accountData{
+    int id;
+    double balance;
+    std::string date;
+};
+
 class AccountQueries{
     public:
+        static std::vector<accountData> getAccountsFromClient(int clientID, sqlite3* db);
         static double getBalance(int id, sqlite3* db);
         static int getID(int clientID, sqlite3* db);
         static void createAccount(const std::string& balance, const std::string& date, int clientID, sqlite3* db, const std::string& path);

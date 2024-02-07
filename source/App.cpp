@@ -4,6 +4,7 @@
 #include "../header/Display.h"
 #include <stdexcept>
 #include <fstream>
+#include <set>
 
 App::App(std::string& db, std::string& pop1, std::string& pop2) : schemaPath(std::move(db)), pop1(std::move(pop1)), pop2(std::move(pop2)){
     init();
@@ -61,18 +62,23 @@ void App::loginInterface(){
                 break;
             }
             case 3: {
+                std::cout << "In which account do you want to log in?\n";
+                changeCurrentAccount();
+                break;
+            }
+            case 4: {
                 std::cout << "How many transfer do you want to be displayed? ";
                 int num = askNumber(30);
                 currLogin.seeTransferHistory(num, db, true);
                 break;
             }
-            case 4: {
+            case 5: {
                 std::cout << "You are creating a new account.\n...";
                 currLogin.newAccount(db, pop2);
                 std::cout << "Your account was created.\n";
                 break;
             }
-            case 5: {
+            case 6: {
                 break;
             }
             case 9:
@@ -209,4 +215,25 @@ void App::newClient() const{
     else{
         std::cout << "Registration failed.\n";
     }
+}
+
+
+bool App::changeCurrentAccount(){
+    std::vector<accountData> vec = currLogin.getAllAccounts(db);
+    if (vec.empty()) return false;
+    std::set<int> accountIDs;
+    std::cout << "Choose the account be entering the id of the accout.\n";
+    int max = -1;
+    for (const accountData& ad : vec){
+        accountIDs.insert(ad.id);
+        if(ad.id > max) max = ad.id;
+        std::cout << "\t ID: " << ad.id << " / CREATED: " << ad.date << " / BALANCE: " << ad.balance << '\n';
+    }
+    int accountID = -1;
+    while(accountIDs.find(accountID) == accountIDs.end()){
+        std::cout << "ID: ";
+        accountID = askNumber(max);
+    }
+    currLogin.setAccountID(accountID);
+    return true;
 }

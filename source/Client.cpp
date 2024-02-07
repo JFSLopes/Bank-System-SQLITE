@@ -6,13 +6,14 @@
 #include <sstream>
 
 Client::Client() : clientID(-1) {}
-Client::Client(int clientID, sqlite3* db) : clientID(clientID) {
-    accountID = AccountQueries::getID(clientID, db);
-}
-
+Client::Client(int clientID, sqlite3* db) : clientID(clientID), accountID(-1) {}
 
 std::string Client::getName(sqlite3* db) const{
     return ClientQueries::fullName(clientID, db);
+}
+
+void Client::setAccountID(int value){
+    accountID = value;
 }
 
 double Client::currBalance(sqlite3* db) const{
@@ -76,4 +77,9 @@ void Client::newAccount(sqlite3* db, const std::string& path) const{
     ss << std::put_time(std::localtime(&nowTimeT), "%Y-%m-%d %H:%M:%S");
 
     AccountQueries::createAccount(balance.str(), ss.str(), clientID, db, path);
+}
+
+std::vector<accountData> Client::getAllAccounts(sqlite3* db) const{
+    std::vector<accountData> vec = AccountQueries::getAccountsFromClient(clientID, db);
+    return vec;
 }

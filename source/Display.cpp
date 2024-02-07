@@ -14,9 +14,10 @@ void Display::afterLoginOptions(){
     std::cout << "Choose an option by enter the corresponding number:\n"
               << "\t1. See balance\n"
               << "\t2. See completed tranfers\n"
-              << "\t3. See failed transfers\n"
-              << "\t4. Register a new account\n"
-              << "\t5. Make a transfer\n"
+              << "\t3. Choose the account to use\n"
+              << "\t4. See failed transfers\n"
+              << "\t5. Register a new account\n"
+              << "\t6. Make a transfer\n"
               << "\t9. Log out.\n\n"
               << "[1..9]: ";
 }
