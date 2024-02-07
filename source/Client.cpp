@@ -2,6 +2,8 @@
 #include "../header/CallBackFunc.h"
 #include <iostream>
 #include <iomanip>
+#include <random>
+#include <sstream>
 
 Client::Client() : clientID(-1) {}
 Client::Client(int clientID, sqlite3* db) : clientID(clientID) {
@@ -56,4 +58,22 @@ void Client::showTransfersHistory(const std::vector<TransferRecord>& transfers, 
         if (!failed) std::cout << " / Final Balance: " << curr;
         std::cout << '\n';
     }
+}
+
+void Client::newAccount(sqlite3* db, const std::string& path) const{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    
+    std::uniform_real_distribution<double> dist(2000, 10000);
+    double randomValue = dist(gen);
+    std::stringstream balance;
+    balance << std::fixed << std::setprecision(2) << randomValue;
+
+    // Get the current time point
+    auto now = std::chrono::system_clock::now();
+    std::time_t nowTimeT = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&nowTimeT), "%Y-%m-%d %H:%M:%S");
+
+    AccountQueries::createAccount(balance.str(), ss.str(), clientID, db, path);
 }

@@ -18,6 +18,7 @@ class Client{
         std::string getName(sqlite3* db) const;
         double currBalance(sqlite3* db) const;
         void seeTransferHistory(int numTransfers, sqlite3* db, bool failed) const;
+        void newAccount(sqlite3* db, const std::string& path) const;
 
 };
 

@@ -31,10 +31,6 @@ void App::api(){
                 newClient();
                 break;
             }
-            case 3:
-                break;
-            case 4:
-                break;
             case 9:
                 leave = true;
                 break;
@@ -54,7 +50,8 @@ void App::loginInterface(){
         Display::afterLoginOptions();
         switch(askNumber(9)){
             case 1: {
-                std::cout << "Your current balance is " << currLogin.currBalance(db) << ".\n";
+                double balance = currLogin.currBalance(db);
+                if (balance != -1) std::cout << "Your current balance is " << balance << ".\n";
                 break;
             }
             case 2: {
@@ -67,6 +64,15 @@ void App::loginInterface(){
                 std::cout << "How many transfer do you want to be displayed? ";
                 int num = askNumber(30);
                 currLogin.seeTransferHistory(num, db, true);
+                break;
+            }
+            case 4: {
+                std::cout << "You are creating a new account.\n...";
+                currLogin.newAccount(db, pop2);
+                std::cout << "Your account was created.\n";
+                break;
+            }
+            case 5: {
                 break;
             }
             case 9:

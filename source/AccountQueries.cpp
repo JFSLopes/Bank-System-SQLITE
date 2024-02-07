@@ -1,6 +1,6 @@
 #include "../header/AccountQueries.h"
-#include <string>
 #include <iostream>
+#include <fstream>
 
 double AccountQueries::getBalance(int id, sqlite3* db){
     std::string query = "SELECT balance FROM Account WHERE id = " + std::to_string(id) + ';';
@@ -26,4 +26,22 @@ int AccountQueries::getID(int clientID, sqlite3* db){
         return std::stoi(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));
     }
     return -1;
+}
+
+void AccountQueries::createAccount(const std::string& balance, const std::string& date, int clientID, sqlite3* db, const std::string& path){
+    std::string query = "INSERT INTO Account (balance, date, client) VALUES (" + balance + ", '" + date + "', " + std::to_string(clientID) + ");\n";
+    char* errMsg = nullptr;
+    if (sqlite3_exec(db, query.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
+        std::string errorMessage = "SQL error: ";
+        errorMessage += errMsg;
+        std::cout << errorMessage << '\n';
+        sqlite3_free(errMsg);
+        return;
+    }
+    std::ofstream file(path, std::ios::app);
+    if (!file.is_open()){
+        std::cout << "File path is invalid";
+    }
+    file << query;
+    file.close();
 }

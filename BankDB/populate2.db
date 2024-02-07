@@ -1,0 +1,1 @@
+INSERT INTO Client (firstName, lastName, email, encPassWord, bank) VALUES ('José', 'Lopes', 'jose@gmail.com', 'qvzl', 1);
