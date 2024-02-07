@@ -1,5 +1,3 @@
--> Ao adicionar transferências é necessário ter cuidado, pois é necessário atualizar as contas das quais o dinheiro sai e entra.
-   Usar o "UPDATE TABLE <> SET" num ficheiro à parte para atualizar os dados depois do populate.
-
 No futuro:
    -> Função para agendar transferências (marcar o estado como pending)
+   -> Eliminar client/account/transfer (basta eliminar o tuplo, pois como tem Cascade, eliminaria todos os que referenciavam.)

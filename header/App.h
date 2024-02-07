@@ -17,6 +17,7 @@ class App{
         void populate() const;
         bool clientLogin();
         int askNumber(int upperLimit) const;
+        std::string askAmount() const;
         void newClient() const;
         /**
          * False means the client does not have an account.
@@ -27,6 +28,7 @@ class App{
         void readFile(std::ifstream& in) const;
         char* readCharFromInput(int size) const;
         void loginInterface();
+        void processTranfer();
 };
 
 #endif

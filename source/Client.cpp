@@ -16,6 +16,10 @@ void Client::setAccountID(int value){
     accountID = value;
 }
 
+int Client::getAccountID() const{
+    return accountID;
+}
+
 double Client::currBalance(sqlite3* db) const{
     if (accountID == -1){
         std::cout << "You do not have an account.\n";
@@ -82,4 +86,25 @@ void Client::newAccount(sqlite3* db, const std::string& path) const{
 std::vector<accountData> Client::getAllAccounts(sqlite3* db) const{
     std::vector<accountData> vec = AccountQueries::getAccountsFromClient(clientID, db);
     return vec;
+}
+
+bool Client::processTranfer(int type, const std::string& amount, int dest, sqlite3* db, const std::string& path) const{
+    auto now = std::chrono::system_clock::now();
+    std::time_t nowTimeT = std::chrono::system_clock::to_time_t(now);
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&nowTimeT), "%Y-%m-%d %H:%M:%S");
+
+    double balance = currBalance(db);
+    double transferValue = std::stod(amount);
+    if (balance >= transferValue){
+        AccountQueries::updateAmount(accountID, -transferValue, db, path);
+        AccountQueries::updateAmount(dest, transferValue, db, path);
+        TransferQueries::processTranfer(ss.str(), amount, clientID, dest, type, 2, db, path);
+        return true;
+    }
+    else{
+        std::cout << "Balance is not enough :(\n";
+        TransferQueries::processTranfer(ss.str(), amount, clientID, dest, type, 3, db, path);
+        return false;
+    }
 }

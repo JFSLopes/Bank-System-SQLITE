@@ -4,6 +4,7 @@
 #include "../header/Display.h"
 #include <stdexcept>
 #include <fstream>
+#include <sstream>
 #include <set>
 
 App::App(std::string& db, std::string& pop1, std::string& pop2) : schemaPath(std::move(db)), pop1(std::move(pop1)), pop2(std::move(pop2)){
@@ -79,6 +80,7 @@ void App::loginInterface(){
                 break;
             }
             case 6: {
+                processTranfer();
                 break;
             }
             case 9:
@@ -176,6 +178,25 @@ int App::askNumber(int upperLimit) const{
     return num;
 }
 
+std::string App::askAmount() const{
+    double num;
+    while(true){
+        if (!(std::cin >> num)){
+            std::cout << "Invalid input. Please enter a number: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        } else if (num <= 0){
+            std::cout << "Invalid number. Please enter a number bigger than 0: ";
+        } else {
+            break;
+        }
+    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::stringstream ans;
+    ans << std::fixed << std::setprecision(2) << num;
+    return ans.str();
+}
+
 void App::newClient() const{
     std::cout << "First Name: ";
     int maxChars = 15;
@@ -236,4 +257,32 @@ bool App::changeCurrentAccount(){
     }
     currLogin.setAccountID(accountID);
     return true;
+}
+
+void App::processTranfer(){
+    if (currLogin.getAccountID() == -1){
+        std::cout << "First you must log onto any of your accounts";
+        return;
+    }
+    std::cout << "Enter the transfer details.\n"
+              << "What is the type of the transfer:\n"
+              << "\t1. Normal\n"
+              << "\t2. Urgent\n"
+              << "[1..2]: ";
+    int type = askNumber(2);
+    std::cout << "Enter the destination account id: ";
+    int dest = askNumber(INT_MAX);
+    if (AccountQueries::getBalance(dest, db) == -1){
+        std::cout << "Transfer canceled, " << dest << " is not a valid account ID.\n";
+        return;
+    }
+    std::cout << "How much money will you transfer: ";
+    std::string amount = askAmount();
+
+    if (currLogin.processTranfer(type, amount, dest, db, pop2)){
+        std::cout << "Transfer completed.\n";
+    }
+    else{
+        std::cout << "Transfer failed.\n";
+    }
 }
