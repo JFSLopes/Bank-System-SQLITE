@@ -1,1 +1,4 @@
 -> Função para adicionar transferências/clientes/contas
+-> Ao adicionar transferências é necessário ter cuidado, pois é necessário atualizar as contas das quais o dinheiro sai e entra.
+   Usar o "UPDATE TABLE <> SET" num ficheiro à parte para atualizar os dados depois do populate.
+   
